@@ -4,6 +4,7 @@ import { BrowserRouter, NavLink, Route, Routes, useLocation } from 'react-router
 import FocusView from './views/FocusView'
 import CalendarView from './views/CalendarView'
 import AnalyticsView from './views/AnalyticsView'
+import CoachView from './views/CoachView'
 import { seedIfEmpty } from './db'
 import { useReminders } from './hooks/useReminders'
 import LoadingOverlay from './components/LoadingOverlay'
@@ -40,6 +41,11 @@ function App() {
               color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
               border: '1px solid #333'
             })}>Analytics</NavLink>
+            <NavLink to="/coach" style={({ isActive }) => ({
+              padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
+              color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
+              border: '1px solid #333'
+            })}>Coach</NavLink>
           </nav>
         </header>
         <main style={{ marginTop: 16 }}>
@@ -47,6 +53,7 @@ function App() {
             <Route path="/" element={<FocusView />} />
             <Route path="/calendar" element={<CalendarView />} />
             <Route path="/analytics" element={<AnalyticsView />} />
+            <Route path="/coach" element={<CoachView />} />
           </Routes>
         </main>
       </div>

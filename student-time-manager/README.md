@@ -47,3 +47,20 @@ npm run preview
 ### Notes
 - All data is stored locally in your browser. Clearing site data will reset it.
 - This is intentionally lightweight and focused on reliability for the assignment.
+
+### Google Calendar Sync
+- Set `VITE_GOOGLE_CLIENT_ID` in `.env`.
+- In Calendar tab, click "Sync Calendar" to fetch events.
+- In Focus tab, use "Add/Update GCal" or "Auto-schedule" for tasks.
+
+### AI Coach
+- New `Coach` tab suggests priorities and a daily plan.
+- Quick-add tasks from natural text, e.g.:
+  - "Ôn Toán in 45m by 2025-09-11 21:00 !high"
+
+### Environment
+Create `.env` from `.env.example`:
+```
+VITE_GOOGLE_CLIENT_ID=your-google-oauth-client-id.apps.googleusercontent.com
+VITE_OPENAI_API_KEY=sk-your-openai-key
+```
