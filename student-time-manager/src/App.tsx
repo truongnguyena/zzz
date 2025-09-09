@@ -5,6 +5,8 @@ import FocusView from './views/FocusView'
 import CalendarView from './views/CalendarView'
 import AnalyticsView from './views/AnalyticsView'
 import { seedIfEmpty } from './db'
+import { useReminders } from './hooks/useReminders'
+import LoadingOverlay from './components/LoadingOverlay'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -14,10 +16,12 @@ function ScrollToTop() {
 
 function App() {
   useEffect(() => { seedIfEmpty() }, [])
+  useReminders()
   return (
     <BrowserRouter>
       <ScrollToTop />
       <div style={{ padding: 16 }}>
+        <LoadingOverlay />
         <header style={{ display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
           <h1 style={{ margin: 0, fontSize: 20 }}>Student Time Manager</h1>
           <nav style={{ display: 'flex', gap: 10 }}>

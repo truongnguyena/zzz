@@ -13,6 +13,7 @@ export interface Task {
   completedAt?: string | null; // ISO string or null
   priority: TaskPriority;
   labels?: string[];
+  googleEventId?: string | null;
 }
 
 export interface SessionLog {

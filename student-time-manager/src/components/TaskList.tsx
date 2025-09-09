@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { db } from '../db';
 import type { AggregatedTask } from '../types';
 import { computeUrgencyScore, formatDateTime, formatMinutes } from '../utils/time';
+import { ensureSignedIn, upsertCalendarEvent } from '../services/google';
+import { addMinutes, parseISO } from 'date-fns';
 
 interface Props {
   tasks: AggregatedTask[];
@@ -27,6 +29,19 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
 
   async function remove(task: AggregatedTask) {
     await db.table('tasks').delete(task.id);
+  }
+
+  async function syncToGoogle(task: AggregatedTask) {
+    await ensureSignedIn();
+    const start = parseISO(task.dueAt);
+    const end = addMinutes(start, Math.max(30, task.remainingMinutes || 30));
+    const eventId = await upsertCalendarEvent(true, task.googleEventId ?? null, {
+      summary: task.title,
+      description: task.description ?? '',
+      start: start.toISOString(),
+      end: end.toISOString(),
+    });
+    await db.table('tasks').update(task.id, { googleEventId: eventId });
   }
 
   function badgeColor(priority: string): string {
@@ -60,6 +75,7 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
                   <span style={{ padding: '2px 8px', borderRadius: 999, border: '1px solid #333', background: '#101014', fontSize: 12, alignSelf: 'center', color: badgeColor(t.priority) }}>{t.priority}</span>
                   <button onClick={() => onEdit(t)}>Edit</button>
                   <button onClick={() => toggleComplete(t)}>{t.completedAt ? 'Reopen' : 'Done'}</button>
+                  <button onClick={() => syncToGoogle(t)}>{t.googleEventId ? 'Update GCal' : 'Add to GCal'}</button>
                   <button onClick={() => remove(t)}>Delete</button>
                 </div>
               </div>
