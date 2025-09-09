@@ -49,9 +49,11 @@ export default function AnalyticsView() {
   return (
     <div style={{ padding: 16, display: 'grid', gap: 12 }}>
       <h2>Analytics</h2>
-      <div>Average actual/estimate ratio: {avgRatio}x</div>
-      <div>Total focused minutes: {totalMinutes}</div>
-      <div style={{ width: '100%', height: 300 }}>
+      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ border: '1px solid #333', borderRadius: 10, padding: 12, background: '#151516' }}>Average actual/estimate ratio: <strong>{avgRatio}x</strong></div>
+        <div style={{ border: '1px solid #333', borderRadius: 10, padding: 12, background: '#151516' }}>Total focused minutes: <strong>{totalMinutes}</strong></div>
+      </div>
+      <div style={{ width: '100%', height: 320, border: '1px solid #333', borderRadius: 10, background: '#151516', padding: 8 }}>
         <ResponsiveContainer>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />

@@ -29,8 +29,14 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
     await db.table('tasks').delete(task.id);
   }
 
+  function badgeColor(priority: string): string {
+    if (priority === 'high') return '#ff6b6b';
+    if (priority === 'medium') return '#ffd166';
+    return '#06d6a0';
+  }
+
   return (
-    <div style={{ display: 'grid', gap: 8 }}>
+    <div style={{ display: 'grid', gap: 12 }}>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
         <input placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)} />
         <label style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
@@ -41,15 +47,17 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {filtered.map((t) => {
           const urgency = computeUrgencyScore(t, procrastinationCoefficient);
-          const pressure = urgency < 60 ? '#ffdddd' : urgency < 180 ? '#fff2cc' : 'transparent';
+          const pressure = urgency < 60 ? '#2a1313' : urgency < 180 ? '#2a2613' : '#151516';
+          const progress = t.estimatedMinutes > 0 ? Math.min(100, Math.round((t.actualMinutes / t.estimatedMinutes) * 100)) : 0;
           return (
-            <li key={t.id} style={{ border: '1px solid #333', borderRadius: 8, padding: 12, marginBottom: 8, background: pressure }}>
+            <li key={t.id} style={{ border: '1px solid #333', borderRadius: 10, padding: 12, marginBottom: 8, background: pressure }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
                 <div>
                   <strong>{t.title}</strong>
                   <div style={{ fontSize: 12, opacity: 0.8 }}>{t.description}</div>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
+                  <span style={{ padding: '2px 8px', borderRadius: 999, border: '1px solid #333', background: '#101014', fontSize: 12, alignSelf: 'center', color: badgeColor(t.priority) }}>{t.priority}</span>
                   <button onClick={() => onEdit(t)}>Edit</button>
                   <button onClick={() => toggleComplete(t)}>{t.completedAt ? 'Reopen' : 'Done'}</button>
                   <button onClick={() => remove(t)}>Delete</button>
@@ -60,7 +68,9 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
                 <span>Est: {formatMinutes(t.estimatedMinutes)}</span>
                 <span>Spent: {formatMinutes(t.actualMinutes)}</span>
                 <span>Remaining: {formatMinutes(t.remainingMinutes)}</span>
-                <span>Priority: {t.priority}</span>
+              </div>
+              <div style={{ marginTop: 8, background: '#0e0e10', borderRadius: 6, overflow: 'hidden', border: '1px solid #2a2a2e' }}>
+                <div style={{ width: `${progress}%`, height: 8, background: '#8ab4ff' }} />
               </div>
             </li>
           );

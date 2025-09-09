@@ -55,8 +55,32 @@ export default function TaskForm({ task, onSaved }: Props) {
     setPriority('medium');
   }
 
+  function toLocalInputValue(iso: string): string {
+    try {
+      const d = new Date(iso);
+      const tzOffset = d.getTimezoneOffset() * 60000;
+      const local = new Date(d.getTime() - tzOffset);
+      return local.toISOString().slice(0, 16);
+    } catch {
+      return iso;
+    }
+  }
+
+  function fromLocalInputValue(localValue: string): string {
+    // localValue like '2025-09-09T12:30'
+    try {
+      const [datePart, timePart] = localValue.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hour, minute] = timePart.split(':').map(Number);
+      const local = new Date(year, (month - 1), day, hour, minute);
+      return local.toISOString();
+    } catch {
+      return localValue;
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 8, marginBottom: 16 }}>
+    <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12, marginBottom: 16, background: '#121214', padding: 12, borderRadius: 10, border: '1px solid #333' }}>
       <div style={{ display: 'grid', gap: 4 }}>
         <label>Title</label>
         <input value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="What will you do?" />
@@ -65,15 +89,15 @@ export default function TaskForm({ task, onSaved }: Props) {
         <label>Description</label>
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Optional details" />
       </div>
-      <div style={{ display: 'grid', gap: 4, gridTemplateColumns: '1fr 1fr 1fr', alignItems: 'center' }}>
+      <div style={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr 1fr', alignItems: 'center' }}>
         <div style={{ display: 'grid', gap: 4 }}>
           <label>Estimate (minutes)</label>
           <input type="number" min={5} step={5} value={estimatedMinutes}
                  onChange={(e) => setEstimatedMinutes(Number(e.target.value))} required />
         </div>
         <div style={{ display: 'grid', gap: 4 }}>
-          <label>Due at (ISO)</label>
-          <input value={dueAt} onChange={(e) => setDueAt(e.target.value)} />
+          <label>Due at</label>
+          <input type="datetime-local" value={toLocalInputValue(dueAt)} onChange={(e) => setDueAt(fromLocalInputValue(e.target.value))} />
         </div>
         <div style={{ display: 'grid', gap: 4 }}>
           <label>Priority</label>
@@ -84,7 +108,7 @@ export default function TaskForm({ task, onSaved }: Props) {
           </select>
         </div>
       </div>
-      <div>
+      <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
         <button type="submit">{task ? 'Save Changes' : 'Add Task'}</button>
       </div>
     </form>

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import './App.css'
-import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import FocusView from './views/FocusView'
 import CalendarView from './views/CalendarView'
 import AnalyticsView from './views/AnalyticsView'
@@ -21,9 +21,21 @@ function App() {
         <header style={{ display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
           <h1 style={{ margin: 0, fontSize: 20 }}>Student Time Manager</h1>
           <nav style={{ display: 'flex', gap: 10 }}>
-            <Link to="/">Focus</Link>
-            <Link to="/calendar">Calendar</Link>
-            <Link to="/analytics">Analytics</Link>
+            <NavLink to="/" end style={({ isActive }) => ({
+              padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
+              color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
+              border: '1px solid #333'
+            })}>Focus</NavLink>
+            <NavLink to="/calendar" style={({ isActive }) => ({
+              padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
+              color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
+              border: '1px solid #333'
+            })}>Calendar</NavLink>
+            <NavLink to="/analytics" style={({ isActive }) => ({
+              padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
+              color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
+              border: '1px solid #333'
+            })}>Analytics</NavLink>
           </nav>
         </header>
         <main style={{ marginTop: 16 }}>
