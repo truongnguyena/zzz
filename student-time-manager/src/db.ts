@@ -1,17 +1,23 @@
 import Dexie, { type Table } from 'dexie';
 import { addDays, addHours } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
-import type { Task, SessionLog, UUID } from './types';
+import type { Task, SessionLog, UUID, CalendarEvent } from './types';
 
 class AppDatabase extends Dexie {
   public tasks!: Table<Task, UUID>;
   public sessions!: Table<SessionLog, UUID>;
+  public events!: Table<CalendarEvent, string>;
 
   constructor() {
     super('student_time_manager');
     this.version(1).stores({
       tasks: 'id, dueAt, completedAt, priority, title',
       sessions: 'id, taskId, startedAt, endedAt',
+    });
+    this.version(2).stores({
+      tasks: 'id, dueAt, completedAt, priority, title',
+      sessions: 'id, taskId, startedAt, endedAt',
+      events: 'id, start, end, source',
     });
   }
 }

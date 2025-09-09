@@ -108,3 +108,24 @@ export async function upsertCalendarEvent(primary: boolean, eventId: string | nu
   return json.id as string;
 }
 
+export async function listUpcomingEvents(maxResults = 100): Promise<{ id: string; summary: string; description?: string; start: string; end: string }[]> {
+  const calendarId = 'primary';
+  const url = new URL(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`);
+  url.searchParams.set('singleEvents', 'true');
+  url.searchParams.set('orderBy', 'startTime');
+  url.searchParams.set('timeMin', new Date().toISOString());
+  url.searchParams.set('maxResults', String(maxResults));
+  const res = await fetch(url.toString(), { headers: authHeaders() });
+  if (!res.ok) throw new Error(`Calendar list error: ${res.status}`);
+  const json = await res.json();
+  const items = (json.items ?? []) as any[];
+  return items
+    .map((it) => {
+      const start = it.start?.dateTime ?? it.start?.date;
+      const end = it.end?.dateTime ?? it.end?.date;
+      if (!start || !end) return null;
+      return { id: it.id as string, summary: it.summary ?? '(No title)', description: it.description ?? '', start, end };
+    })
+    .filter(Boolean) as any;
+}
+

@@ -29,3 +29,12 @@ export interface AggregatedTask extends Task {
   remainingMinutes: number;
 }
 
+export interface CalendarEvent {
+  id: UUID; // Google event id
+  summary: string;
+  description?: string;
+  start: string; // ISO
+  end: string; // ISO
+  source: 'google';
+}
+

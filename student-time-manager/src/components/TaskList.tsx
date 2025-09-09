@@ -4,6 +4,9 @@ import type { AggregatedTask } from '../types';
 import { computeUrgencyScore, formatDateTime, formatMinutes } from '../utils/time';
 import { ensureSignedIn, upsertCalendarEvent } from '../services/google';
 import { addMinutes, parseISO } from 'date-fns';
+import { db as database } from '../db';
+import type { CalendarEvent } from '../types';
+import { findFreeSlot } from '../utils/schedule';
 
 interface Props {
   tasks: AggregatedTask[];
@@ -44,6 +47,21 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
     await db.table('tasks').update(task.id, { googleEventId: eventId });
   }
 
+  async function autoSchedule(task: AggregatedTask) {
+    await ensureSignedIn();
+    const busy = await database.table<CalendarEvent>('events').toArray();
+    const slot = findFreeSlot(task, busy, { preferredStartHour: 20, preferredEndHour: 24, minBlockMinutes: 30 });
+    const start = slot?.start ?? new Date();
+    const end = slot?.end ?? addMinutes(start, Math.max(30, task.remainingMinutes || 30));
+    const eventId = await upsertCalendarEvent(true, task.googleEventId ?? null, {
+      summary: task.title,
+      description: `[Auto-scheduled] ${task.description ?? ''}`.trim(),
+      start: start.toISOString(),
+      end: end.toISOString(),
+    });
+    await db.table('tasks').update(task.id, { googleEventId: eventId });
+  }
+
   function badgeColor(priority: string): string {
     if (priority === 'high') return '#ff6b6b';
     if (priority === 'medium') return '#ffd166';
@@ -76,6 +94,7 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
                   <button onClick={() => onEdit(t)}>Edit</button>
                   <button onClick={() => toggleComplete(t)}>{t.completedAt ? 'Reopen' : 'Done'}</button>
                   <button onClick={() => syncToGoogle(t)}>{t.googleEventId ? 'Update GCal' : 'Add to GCal'}</button>
+                  <button onClick={() => autoSchedule(t)}>Auto-schedule</button>
                   <button onClick={() => remove(t)}>Delete</button>
                 </div>
               </div>
