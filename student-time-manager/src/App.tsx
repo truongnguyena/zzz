@@ -15,6 +15,11 @@ import KawaiiStickers from './components/KawaiiStickers'
 import ConfettiLayer from './components/ConfettiLayer'
 import AmbientSound from './components/AmbientSound'
 import OnboardingModal from './components/OnboardingModal'
+import RouteProgress from './components/RouteProgress'
+import AnimeLoading from './components/AnimeLoading'
+import MaidAIView from './views/MaidAIView'
+import { useEffect as useEffect2 } from 'react'
+import { enableKonami } from './utils/konami'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -26,10 +31,13 @@ function App() {
   useEffect(() => { seedIfEmpty() }, [])
   useReminders()
   const { t, lang, setLang } = useI18n()
+  useEffect2(() => enableKonami(() => { try { (window as any).dispatchEvent(new CustomEvent('confetti')) } catch {} }), [])
   return (
     <BrowserRouter>
       <ScrollToTop />
       <div style={{ padding: 16 }}>
+        <RouteProgress />
+        <AnimeLoading />
         <LoadingOverlay />
         <ConfettiLayer />
         <OnboardingModal />
@@ -57,6 +65,11 @@ function App() {
               color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
               border: '1px solid #333'
             })}>{t('nav.coach')}</NavLink>
+            <NavLink to="/maid" style={({ isActive }) => ({
+              padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
+              color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
+              border: '1px solid #333'
+            })}>Maid AI</NavLink>
             <NavLink to="/settings" style={({ isActive }) => ({
               padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
               color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
@@ -80,6 +93,7 @@ function App() {
             <Route path="/calendar" element={<CalendarView />} />
             <Route path="/analytics" element={<AnalyticsView />} />
             <Route path="/coach" element={<CoachView />} />
+            <Route path="/maid" element={<MaidAIView />} />
             <Route path="/settings" element={<SettingsView />} />
           </Routes>
         </main>
