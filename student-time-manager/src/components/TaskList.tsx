@@ -30,6 +30,10 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
 
   async function toggleComplete(task: AggregatedTask) {
     await db.table('tasks').update(task.id, { completedAt: task.completedAt ? null : new Date().toISOString() });
+    if (!task.completedAt) {
+      // Just completed
+      try { (await import('../utils/confetti')).triggerConfetti(); } catch {}
+    }
   }
 
   async function remove(task: AggregatedTask) {
