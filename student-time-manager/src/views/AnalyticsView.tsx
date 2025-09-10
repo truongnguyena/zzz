@@ -4,10 +4,12 @@ import { db } from '../db';
 import type { SessionLog, Task } from '../types';
 import { format, parseISO } from 'date-fns';
 import { useI18n } from '../i18n/i18n';
+import { listBigML } from '../services/bigml';
 
 export default function AnalyticsView() {
   const [data, setData] = useState<{ day: string; minutes: number }[]>([]);
   const [avgRatio, setAvgRatio] = useState<number>(1);
+  const [bigml, setBigml] = useState<any[]>([]);
 
   useEffect(() => {
     async function load() {
@@ -54,6 +56,17 @@ export default function AnalyticsView() {
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
         <div style={{ border: '1px solid #301236', borderRadius: 10, padding: 12, background: '#170a1d' }}>{t('analytics.avgRatio')}: <strong>{avgRatio}x</strong></div>
         <div style={{ border: '1px solid #301236', borderRadius: 10, padding: 12, background: '#170a1d' }}>{t('analytics.total')}: <strong>{totalMinutes}</strong></div>
+      </div>
+      <div style={{ marginTop: 12, border: '1px solid #301236', borderRadius: 10, padding: 12, background: '#170a1d' }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
+          <button onClick={async () => { try { const r = await listBigML('model'); setBigml(r?.objects || r?.resources || []); } catch (e) {} }}>BigML Models</button>
+          <button onClick={async () => { try { const r = await listBigML('dataset'); setBigml(r?.objects || r?.resources || []); } catch (e) {} }}>BigML Datasets</button>
+        </div>
+        {bigml.length > 0 && (
+          <ul style={{ margin: 0, paddingLeft: 16 }}>
+            {bigml.slice(0, 8).map((it: any, idx: number) => <li key={idx}>{typeof it === 'string' ? it : (it?.name || it?.resource || 'item')}</li>)}
+          </ul>
+        )}
       </div>
       <div style={{ width: '100%', height: 320, border: '1px solid #301236', borderRadius: 12, background: '#170a1d', padding: 8 }}>
         <ResponsiveContainer>
