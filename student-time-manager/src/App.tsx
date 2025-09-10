@@ -9,6 +9,8 @@ import { seedIfEmpty } from './db'
 import { useReminders } from './hooks/useReminders'
 import LoadingOverlay from './components/LoadingOverlay'
 import { useI18n } from './i18n/i18n'
+import HeaderParticles from './components/HeaderParticles'
+import KawaiiStickers from './components/KawaiiStickers'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -25,7 +27,8 @@ function App() {
       <ScrollToTop />
       <div style={{ padding: 16 }}>
         <LoadingOverlay />
-        <header style={{ display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
+        <header style={{ position: 'relative', display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border)', borderRadius: 12, padding: 12, background: 'linear-gradient(135deg, #1a0b22, #2a0e33)' }}>
+          <HeaderParticles />
           <h1 style={{ margin: 0, fontSize: 20 }}>{t('app.title')}</h1>
           <nav style={{ display: 'flex', gap: 10 }}>
             <NavLink to="/" end style={({ isActive }) => ({
@@ -56,6 +59,7 @@ function App() {
             </select>
           </div>
         </header>
+        <KawaiiStickers />
         <main style={{ marginTop: 16 }}>
           <Routes>
             <Route path="/" element={<FocusView />} />
