@@ -82,7 +82,7 @@ export default function TaskForm({ task, onSaved }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12, marginBottom: 16, background: '#121214', padding: 12, borderRadius: 10, border: '1px solid #333' }}>
+    <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12, marginBottom: 16, background: 'linear-gradient(135deg, #14091b, #1c0b26)', padding: 12, borderRadius: 12, border: '1px solid #301236', boxShadow: '0 10px 30px rgba(255,122,198,0.08)' }}>
       <div style={{ display: 'grid', gap: 4 }}>
         <label>{t('form.title')}</label>
         <input value={title} onChange={(e) => setTitle(e.target.value)} required placeholder={t('form.title')} />

@@ -85,7 +85,7 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
           const pressure = urgency < 60 ? '#2b0f1e' : urgency < 180 ? '#2a1a29' : '#170a1d';
           const progress = t.estimatedMinutes > 0 ? Math.min(100, Math.round((t.actualMinutes / t.estimatedMinutes) * 100)) : 0;
           return (
-            <li key={t.id} style={{ border: '1px solid #333', borderRadius: 10, padding: 12, marginBottom: 8, background: pressure }}>
+            <li key={t.id} style={{ border: '1px solid #301236', borderRadius: 12, padding: 12, marginBottom: 8, background: pressure, boxShadow: '0 6px 18px rgba(255,122,198,0.06)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
                 <div>
                   <strong>{t.title}</strong>
