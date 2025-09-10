@@ -4,11 +4,13 @@ import { generateDailyPlan, prioritizeTasks, quickAddFromText } from '../service
 import { db } from '../db';
 import type { Task } from '../types';
 import { v4 as uuidv4 } from 'uuid';
+import { useI18n } from '../i18n/i18n';
 
 export default function CoachView() {
   const { tasks } = useLiveAggregatedTasks();
   const [plan, setPlan] = useState<string[]>([]);
   const [prompt, setPrompt] = useState('');
+  const { t } = useI18n();
 
   async function handlePrioritize() {
     const ordered = await prioritizeTasks(tasks);
@@ -42,16 +44,16 @@ export default function CoachView() {
 
   return (
     <div style={{ padding: 16, display: 'grid', gap: 12 }}>
-      <h2>AI Coach</h2>
+      <h2>{t('coach.title')}</h2>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <button onClick={handlePrioritize}>Đề xuất ưu tiên</button>
-        <button onClick={handleDailyPlan}>Kế hoạch hôm nay</button>
+        <button onClick={handlePrioritize}>{t('coach.prioritize')}</button>
+        <button onClick={handleDailyPlan}>{t('coach.dailyPlan')}</button>
       </div>
       <div style={{ display: 'grid', gap: 8 }}>
-        <label>Quick-add từ câu lệnh (ví dụ: "Ôn Toán in 45m by 2025-09-11 21:00 !high")</label>
+        <label>{t('coach.quickAdd.label')}</label>
         <div style={{ display: 'flex', gap: 8 }}>
-          <input placeholder="Nhập lệnh..." value={prompt} onChange={(e) => setPrompt(e.target.value)} style={{ flex: 1 }} />
-          <button onClick={handleQuickAdd}>Thêm</button>
+          <input placeholder={t('list.search')} value={prompt} onChange={(e) => setPrompt(e.target.value)} style={{ flex: 1 }} />
+          <button onClick={handleQuickAdd}>{t('form.add')}</button>
         </div>
       </div>
       {plan.length > 0 && (

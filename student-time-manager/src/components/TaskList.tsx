@@ -7,6 +7,7 @@ import { addMinutes, parseISO } from 'date-fns';
 import { db as database } from '../db';
 import type { CalendarEvent } from '../types';
 import { findFreeSlot } from '../utils/schedule';
+import { useI18n } from '../i18n/i18n';
 
 interface Props {
   tasks: AggregatedTask[];
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: Props) {
+  const { t: tr } = useI18n();
   const [query, setQuery] = useState('');
   const [onlyOpen, setOnlyOpen] = useState(true);
 
@@ -71,10 +73,10 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
   return (
     <div style={{ display: 'grid', gap: 12 }}>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-        <input placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)} />
+        <input placeholder={tr('list.search')} value={query} onChange={(e) => setQuery(e.target.value)} />
         <label style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           <input type="checkbox" checked={onlyOpen} onChange={(e) => setOnlyOpen(e.target.checked)} />
-          Open only
+          {tr('list.openOnly')}
         </label>
       </div>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
@@ -91,11 +93,11 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <span style={{ padding: '2px 8px', borderRadius: 999, border: '1px solid #333', background: '#101014', fontSize: 12, alignSelf: 'center', color: badgeColor(t.priority) }}>{t.priority}</span>
-                  <button onClick={() => onEdit(t)}>Edit</button>
-                  <button onClick={() => toggleComplete(t)}>{t.completedAt ? 'Reopen' : 'Done'}</button>
-                  <button onClick={() => syncToGoogle(t)}>{t.googleEventId ? 'Update GCal' : 'Add to GCal'}</button>
-                  <button onClick={() => autoSchedule(t)}>Auto-schedule</button>
-                  <button onClick={() => remove(t)}>Delete</button>
+                  <button onClick={() => onEdit(t)}>{tr('list.edit')}</button>
+                  <button onClick={() => toggleComplete(t)}>{t.completedAt ? tr('list.reopen') : tr('list.done')}</button>
+                  <button onClick={() => syncToGoogle(t)}>{t.googleEventId ? tr('list.updateGCal') : tr('list.addGCal')}</button>
+                  <button onClick={() => autoSchedule(t)}>{tr('list.autoSchedule')}</button>
+                  <button onClick={() => remove(t)}>{tr('list.delete')}</button>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: 12, fontSize: 12, opacity: 0.9, marginTop: 8, flexWrap: 'wrap' }}>

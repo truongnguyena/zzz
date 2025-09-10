@@ -8,6 +8,7 @@ import CoachView from './views/CoachView'
 import { seedIfEmpty } from './db'
 import { useReminders } from './hooks/useReminders'
 import LoadingOverlay from './components/LoadingOverlay'
+import { useI18n } from './i18n/i18n'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -18,35 +19,42 @@ function ScrollToTop() {
 function App() {
   useEffect(() => { seedIfEmpty() }, [])
   useReminders()
+  const { t, lang, setLang } = useI18n()
   return (
     <BrowserRouter>
       <ScrollToTop />
       <div style={{ padding: 16 }}>
         <LoadingOverlay />
         <header style={{ display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
-          <h1 style={{ margin: 0, fontSize: 20 }}>Student Time Manager</h1>
+          <h1 style={{ margin: 0, fontSize: 20 }}>{t('app.title')}</h1>
           <nav style={{ display: 'flex', gap: 10 }}>
             <NavLink to="/" end style={({ isActive }) => ({
               padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
               color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
               border: '1px solid #333'
-            })}>Focus</NavLink>
+            })}>{t('nav.focus')}</NavLink>
             <NavLink to="/calendar" style={({ isActive }) => ({
               padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
               color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
               border: '1px solid #333'
-            })}>Calendar</NavLink>
+            })}>{t('nav.calendar')}</NavLink>
             <NavLink to="/analytics" style={({ isActive }) => ({
               padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
               color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
               border: '1px solid #333'
-            })}>Analytics</NavLink>
+            })}>{t('nav.analytics')}</NavLink>
             <NavLink to="/coach" style={({ isActive }) => ({
               padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
               color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
               border: '1px solid #333'
-            })}>Coach</NavLink>
+            })}>{t('nav.coach')}</NavLink>
           </nav>
+          <div>
+            <select value={lang} onChange={(e) => setLang(e.target.value as any)} style={{ borderRadius: 8, border: '1px solid #333', background: '#101014', color: '#e6e6e6', padding: '6px 10px' }}>
+              <option value="vi">VI</option>
+              <option value="en">EN</option>
+            </select>
+          </div>
         </header>
         <main style={{ marginTop: 16 }}>
           <Routes>

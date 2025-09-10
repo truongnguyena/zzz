@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { db } from '../db';
 import type { CalendarEvent } from '../types';
 import { useCalendarSync } from '../hooks/useCalendarSync';
+import { useI18n } from '../i18n/i18n';
 
 export default function CalendarView() {
   const { tasks } = useLiveAggregatedTasks();
@@ -12,6 +13,7 @@ export default function CalendarView() {
   const days = eachDayOfInterval({ start, end });
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const { sync, syncing, error } = useCalendarSync();
+  const { t } = useI18n();
 
   useEffect(() => {
     let cancelled = false;
@@ -24,9 +26,9 @@ export default function CalendarView() {
 
   return (
     <div style={{ padding: 16 }}>
-      <h2>Calendar</h2>
+      <h2>{t('calendar.title')}</h2>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
-        <button onClick={sync} disabled={syncing}>{syncing ? 'Syncing…' : 'Sync Calendar'}</button>
+        <button onClick={sync} disabled={syncing}>{syncing ? 'Syncing…' : t('calendar.sync')}</button>
         {error && <span style={{ color: '#ff6b6b' }}>{error}</span>}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 8 }}>

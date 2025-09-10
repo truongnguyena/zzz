@@ -3,6 +3,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { db } from '../db';
 import type { SessionLog, Task } from '../types';
 import { format, parseISO } from 'date-fns';
+import { useI18n } from '../i18n/i18n';
 
 export default function AnalyticsView() {
   const [data, setData] = useState<{ day: string; minutes: number }[]>([]);
@@ -45,13 +46,14 @@ export default function AnalyticsView() {
   }, []);
 
   const totalMinutes = useMemo(() => data.reduce((acc, d) => acc + d.minutes, 0), [data]);
+  const { t } = useI18n();
 
   return (
     <div style={{ padding: 16, display: 'grid', gap: 12 }}>
-      <h2>Analytics</h2>
+      <h2>{t('analytics.title')}</h2>
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-        <div style={{ border: '1px solid #333', borderRadius: 10, padding: 12, background: '#151516' }}>Average actual/estimate ratio: <strong>{avgRatio}x</strong></div>
-        <div style={{ border: '1px solid #333', borderRadius: 10, padding: 12, background: '#151516' }}>Total focused minutes: <strong>{totalMinutes}</strong></div>
+        <div style={{ border: '1px solid #333', borderRadius: 10, padding: 12, background: '#151516' }}>{t('analytics.avgRatio')}: <strong>{avgRatio}x</strong></div>
+        <div style={{ border: '1px solid #333', borderRadius: 10, padding: 12, background: '#151516' }}>{t('analytics.total')}: <strong>{totalMinutes}</strong></div>
       </div>
       <div style={{ width: '100%', height: 320, border: '1px solid #333', borderRadius: 10, background: '#151516', padding: 8 }}>
         <ResponsiveContainer>

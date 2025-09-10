@@ -3,6 +3,7 @@ import { addHours, formatISO } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db';
 import type { Task, TaskPriority } from '../types';
+import { useI18n } from '../i18n/i18n';
 
 interface Props {
   task?: Task | null;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function TaskForm({ task, onSaved }: Props) {
+  const { t } = useI18n();
   const [title, setTitle] = useState(task?.title ?? '');
   const [description, setDescription] = useState(task?.description ?? '');
   const [estimatedMinutes, setEstimatedMinutes] = useState<number>(task?.estimatedMinutes ?? 60);
@@ -82,25 +84,25 @@ export default function TaskForm({ task, onSaved }: Props) {
   return (
     <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12, marginBottom: 16, background: '#121214', padding: 12, borderRadius: 10, border: '1px solid #333' }}>
       <div style={{ display: 'grid', gap: 4 }}>
-        <label>Title</label>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="What will you do?" />
+        <label>{t('form.title')}</label>
+        <input value={title} onChange={(e) => setTitle(e.target.value)} required placeholder={t('form.title')} />
       </div>
       <div style={{ display: 'grid', gap: 4 }}>
-        <label>Description</label>
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Optional details" />
+        <label>{t('form.description')}</label>
+        <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t('form.description')} />
       </div>
       <div style={{ display: 'grid', gap: 12, gridTemplateColumns: '1fr 1fr 1fr', alignItems: 'center' }}>
         <div style={{ display: 'grid', gap: 4 }}>
-          <label>Estimate (minutes)</label>
+          <label>{t('form.estimate')}</label>
           <input type="number" min={5} step={5} value={estimatedMinutes}
                  onChange={(e) => setEstimatedMinutes(Number(e.target.value))} required />
         </div>
         <div style={{ display: 'grid', gap: 4 }}>
-          <label>Due at</label>
+          <label>{t('form.due')}</label>
           <input type="datetime-local" value={toLocalInputValue(dueAt)} onChange={(e) => setDueAt(fromLocalInputValue(e.target.value))} />
         </div>
         <div style={{ display: 'grid', gap: 4 }}>
-          <label>Priority</label>
+          <label>{t('form.priority')}</label>
           <select value={priority} onChange={(e) => setPriority(e.target.value as TaskPriority)}>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
@@ -109,7 +111,7 @@ export default function TaskForm({ task, onSaved }: Props) {
         </div>
       </div>
       <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-        <button type="submit">{task ? 'Save Changes' : 'Add Task'}</button>
+        <button type="submit">{task ? t('form.save') : t('form.add')}</button>
       </div>
     </form>
   );
