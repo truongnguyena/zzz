@@ -53,6 +53,25 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
     await db.table('tasks').update(task.id, { googleEventId: eventId });
   }
 
+  async function snooze(task: AggregatedTask, type: '1h' | 'tomorrow' | 'nextweek') {
+    const due = parseISO(task.dueAt);
+    switch (type) {
+      case '1h':
+        due.setHours(due.getHours() + 1);
+        break;
+      case 'tomorrow': {
+        due.setDate(due.getDate() + 1);
+        due.setHours(9, 0, 0, 0);
+        break;
+      }
+      case 'nextweek': {
+        due.setDate(due.getDate() + 7);
+        due.setHours(9, 0, 0, 0);
+        break;
+      }
+    }
+    await db.table('tasks').update(task.id, { dueAt: due.toISOString() });
+  }
   async function autoSchedule(task: AggregatedTask) {
     await ensureSignedIn();
     const busy = await database.table<CalendarEvent>('events').toArray();
@@ -101,6 +120,11 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
                   <button onClick={() => toggleComplete(t)}>{t.completedAt ? tr('list.reopen') : tr('list.done')}</button>
                   <button onClick={() => syncToGoogle(t)}>{t.googleEventId ? tr('list.updateGCal') : tr('list.addGCal')}</button>
                   <button onClick={() => autoSchedule(t)}>{tr('list.autoSchedule')}</button>
+                  <div style={{ position: 'relative', display: 'inline-flex', gap: 4 }}>
+                    <button onClick={() => snooze(t, '1h')}>+1h</button>
+                    <button onClick={() => snooze(t, 'tomorrow')}>Tomorrow</button>
+                    <button onClick={() => snooze(t, 'nextweek')}>Next week</button>
+                  </div>
                   <button onClick={() => remove(t)}>{tr('list.delete')}</button>
                 </div>
               </div>

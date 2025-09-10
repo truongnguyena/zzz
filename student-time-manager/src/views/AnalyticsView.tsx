@@ -10,6 +10,7 @@ export default function AnalyticsView() {
   const [data, setData] = useState<{ day: string; minutes: number }[]>([]);
   const [avgRatio, setAvgRatio] = useState<number>(1);
   const [bigml, setBigml] = useState<any[]>([]);
+  const [hours, setHours] = useState<{ hour: number; minutes: number }[]>([]);
 
   useEffect(() => {
     async function load() {
@@ -43,6 +44,15 @@ export default function AnalyticsView() {
         }
       }
       setAvgRatio(count ? Math.round((sum / count) * 100) / 100 : 1);
+
+      // Best work hours (aggregate session minutes by start hour)
+      const hourMap = new Map<number, number>();
+      for (const s of sessions) {
+        const h = parseISO(s.startedAt).getHours();
+        hourMap.set(h, (hourMap.get(h) ?? 0) + s.durationMinutes);
+      }
+      const hourRows = Array.from({ length: 24 }).map((_, h) => ({ hour: h, minutes: hourMap.get(h) ?? 0 }));
+      setHours(hourRows);
     }
     load();
   }, []);
@@ -76,6 +86,17 @@ export default function AnalyticsView() {
             <YAxis />
             <Tooltip />
             <Bar dataKey="minutes" fill="#8884d8" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <div style={{ width: '100%', height: 240, border: '1px solid #301236', borderRadius: 12, background: '#170a1d', padding: 8 }}>
+        <ResponsiveContainer>
+          <BarChart data={hours}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="hour" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="minutes" fill="#ff7ac6" />
           </BarChart>
         </ResponsiveContainer>
       </div>

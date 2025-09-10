@@ -14,6 +14,7 @@ import HeaderParticles from './components/HeaderParticles'
 import KawaiiStickers from './components/KawaiiStickers'
 import ConfettiLayer from './components/ConfettiLayer'
 import AmbientSound from './components/AmbientSound'
+import OnboardingModal from './components/OnboardingModal'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -31,6 +32,7 @@ function App() {
       <div style={{ padding: 16 }}>
         <LoadingOverlay />
         <ConfettiLayer />
+        <OnboardingModal />
         <header style={{ position: 'relative', display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--border)', borderRadius: 12, padding: 12, background: 'linear-gradient(135deg, #1a0b22, #2a0e33)' }}>
           <HeaderParticles />
           <h1 style={{ margin: 0, fontSize: 20 }}>{t('app.title')}</h1>
