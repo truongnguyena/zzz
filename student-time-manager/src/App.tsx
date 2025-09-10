@@ -5,6 +5,7 @@ import FocusView from './views/FocusView'
 import CalendarView from './views/CalendarView'
 import AnalyticsView from './views/AnalyticsView'
 import CoachView from './views/CoachView'
+import SettingsView from './views/SettingsView'
 import { seedIfEmpty } from './db'
 import { useReminders } from './hooks/useReminders'
 import LoadingOverlay from './components/LoadingOverlay'
@@ -54,6 +55,11 @@ function App() {
               color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
               border: '1px solid #333'
             })}>{t('nav.coach')}</NavLink>
+            <NavLink to="/settings" style={({ isActive }) => ({
+              padding: '6px 10px', borderRadius: 8, textDecoration: 'none',
+              color: isActive ? '#0f172a' : '#e6e6e6', background: isActive ? '#8ab4ff' : 'transparent',
+              border: '1px solid #333'
+            })}>Settings</NavLink>
           </nav>
           <div>
             <select value={lang} onChange={(e) => setLang(e.target.value as any)} style={{ borderRadius: 8, border: '1px solid #333', background: '#101014', color: '#e6e6e6', padding: '6px 10px' }}>
@@ -72,6 +78,7 @@ function App() {
             <Route path="/calendar" element={<CalendarView />} />
             <Route path="/analytics" element={<AnalyticsView />} />
             <Route path="/coach" element={<CoachView />} />
+            <Route path="/settings" element={<SettingsView />} />
           </Routes>
         </main>
       </div>
