@@ -12,6 +12,7 @@ import { useI18n } from './i18n/i18n'
 import HeaderParticles from './components/HeaderParticles'
 import KawaiiStickers from './components/KawaiiStickers'
 import ConfettiLayer from './components/ConfettiLayer'
+import AmbientSound from './components/AmbientSound'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -59,6 +60,9 @@ function App() {
               <option value="vi">VI</option>
               <option value="en">EN</option>
             </select>
+            <div style={{ marginTop: 6, display: 'flex', justifyContent: 'flex-end' }}>
+              <AmbientSound />
+            </div>
           </div>
         </header>
         <KawaiiStickers />
