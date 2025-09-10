@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { I18nProvider } from './i18n/i18n'
 import { ThemeProvider } from './theme/ThemeProvider'
+import './kurumi'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
