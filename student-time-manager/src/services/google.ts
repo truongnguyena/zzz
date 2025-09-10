@@ -3,7 +3,7 @@
 
 const GIS_SRC = 'https://accounts.google.com/gsi/client';
 const GAPI_SRC = 'https://apis.google.com/js/api.js';
-const CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar.events';
+const CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events';
 
 let tokenClient: any = null;
 let accessToken: string | null = null;
@@ -127,5 +127,36 @@ export async function listUpcomingEvents(maxResults = 100): Promise<{ id: string
       return { id: it.id as string, summary: it.summary ?? '(No title)', description: it.description ?? '', start, end };
     })
     .filter(Boolean) as any;
+}
+
+// ----------------- ACL (Access Control) -----------------
+export interface AclRule {
+  id: string; // rule id, usually like user:email@example.com
+  role: 'none' | 'freeBusyReader' | 'reader' | 'writer' | 'owner';
+  scope: { type: 'default' | 'user' | 'group' | 'domain'; value?: string };
+}
+
+export async function listAclRules(calendarId: string = 'primary'): Promise<AclRule[]> {
+  const url = new URL(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/acl`);
+  const res = await fetch(url.toString(), { headers: authHeaders() });
+  if (!res.ok) throw new Error(`ACL list error: ${res.status}`);
+  const json = await res.json();
+  const items = (json.items ?? []) as any[];
+  return items.map((it) => ({ id: it.id, role: it.role, scope: it.scope }));
+}
+
+export async function insertAclRule(calendarId: string, email: string, role: AclRule['role']): Promise<AclRule> {
+  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/acl`;
+  const body = { role, scope: { type: 'user', value: email } };
+  const res = await fetch(url, { method: 'POST', headers: authHeaders(), body: JSON.stringify(body) });
+  if (!res.ok) throw new Error(`ACL insert error: ${res.status}`);
+  const it = await res.json();
+  return { id: it.id, role: it.role, scope: it.scope } as AclRule;
+}
+
+export async function deleteAclRule(calendarId: string, ruleId: string): Promise<void> {
+  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/acl/${encodeURIComponent(ruleId)}`;
+  const res = await fetch(url, { method: 'DELETE', headers: authHeaders() });
+  if (!res.ok) throw new Error(`ACL delete error: ${res.status}`);
 }
 
