@@ -65,9 +65,9 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
   }
 
   function badgeColor(priority: string): string {
-    if (priority === 'high') return '#ff6b6b';
-    if (priority === 'medium') return '#ffd166';
-    return '#06d6a0';
+    if (priority === 'high') return '#ff6584';
+    if (priority === 'medium') return '#ff9bd6';
+    return '#ffc0cb';
   }
 
   return (
@@ -82,7 +82,7 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {filtered.map((t) => {
           const urgency = computeUrgencyScore(t, procrastinationCoefficient);
-          const pressure = urgency < 60 ? '#2a1313' : urgency < 180 ? '#2a2613' : '#151516';
+          const pressure = urgency < 60 ? '#2b0f1e' : urgency < 180 ? '#2a1a29' : '#170a1d';
           const progress = t.estimatedMinutes > 0 ? Math.min(100, Math.round((t.actualMinutes / t.estimatedMinutes) * 100)) : 0;
           return (
             <li key={t.id} style={{ border: '1px solid #333', borderRadius: 10, padding: 12, marginBottom: 8, background: pressure }}>
@@ -106,8 +106,8 @@ export default function TaskList({ tasks, procrastinationCoefficient, onEdit }: 
                 <span>Spent: {formatMinutes(t.actualMinutes)}</span>
                 <span>Remaining: {formatMinutes(t.remainingMinutes)}</span>
               </div>
-              <div style={{ marginTop: 8, background: '#0e0e10', borderRadius: 6, overflow: 'hidden', border: '1px solid #2a2a2e' }}>
-                <div style={{ width: `${progress}%`, height: 8, background: '#8ab4ff' }} />
+              <div style={{ marginTop: 8, background: '#160a1d', borderRadius: 6, overflow: 'hidden', border: '1px solid #301236' }}>
+                <div style={{ width: `${progress}%`, height: 8, background: '#ff7ac6' }} />
               </div>
             </li>
           );

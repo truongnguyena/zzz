@@ -1,15 +1,16 @@
 :root {
   color-scheme: light dark;
-  --bg: #0b0b0c;
-  --surface: #111114;
-  --muted: #151516;
-  --border: #2a2a2e;
-  --text: #e8e8ea;
-  --primary: #8ab4ff;
-  --ring: #3a4a6a;
-  --danger: #ff6b6b;
-  --warn: #ffd166;
-  --success: #06d6a0;
+  /* Pink anime palette */
+  --bg: #0b0810;
+  --surface: #110815;
+  --muted: #170a1d;
+  --border: #301236;
+  --text: #fde7f4;
+  --primary: #ff7ac6;
+  --ring: #ff9bd6;
+  --danger: #ff6584;
+  --warn: #ffc0cb;
+  --success: #95ffa6;
 }
 
 * { box-sizing: border-box; }
@@ -25,17 +26,18 @@ a { color: var(--primary); }
 button {
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: linear-gradient(to bottom right, #1b1b1d, #151518);
+  background: linear-gradient(135deg, #1a0b22, #2a0e33);
   color: var(--text);
   padding: 8px 12px;
 }
 button:hover {
   outline: 1px solid var(--ring);
+  box-shadow: 0 0 0 3px rgba(255, 122, 198, 0.15);
 }
 input, textarea, select {
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: linear-gradient(135deg, #14091b, #1b0b24);
   color: var(--text);
   padding: 10px 12px;
 }

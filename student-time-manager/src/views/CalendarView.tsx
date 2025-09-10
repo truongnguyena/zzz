@@ -60,20 +60,20 @@ export default function CalendarView() {
       )}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 8 }}>
         {days.map((d) => (
-          <div key={d.toISOString()} style={{ border: '1px solid #333', borderRadius: 10, padding: 8, minHeight: 140, background: '#151516' }}>
+          <div key={d.toISOString()} style={{ border: '1px solid #301236', borderRadius: 12, padding: 8, minHeight: 140, background: '#170a1d' }}>
             <div style={{ fontWeight: 600, marginBottom: 8 }}>{format(d, 'EEE d')}</div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 6 }}>
               {tasks
                 .filter((t) => isSameDay(parseISO(t.dueAt), d))
                 .map((t) => (
-                  <li key={t.id} style={{ fontSize: 12, border: '1px solid #2a2a2e', borderRadius: 8, padding: '4px 6px', background: '#101014' }}>
+                  <li key={t.id} style={{ fontSize: 12, border: '1px solid #301236', borderRadius: 8, padding: '4px 6px', background: '#14091b' }}>
                     <span style={{ opacity: 0.85 }}>{t.title}</span>
                   </li>
                 ))}
               {events
                 .filter((e) => isSameDay(parseISO(e.start), d))
                 .map((e) => (
-                  <li key={e.id} style={{ fontSize: 12, border: '1px dashed #2a2a2e', borderRadius: 8, padding: '4px 6px', background: '#0e0e10' }}>
+                  <li key={e.id} style={{ fontSize: 12, border: '1px dashed #301236', borderRadius: 8, padding: '4px 6px', background: '#120816' }}>
                     <span style={{ opacity: 0.85 }}>🗓 {e.summary}</span>
                   </li>
                 ))}
